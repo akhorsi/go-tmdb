@@ -1,13 +1,13 @@
 package tmdb
 
 import (
-	"fmt"
-	"net/url"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"net/url"
 )
 
-var ErrUnknownMediaType  = errors.New("Unknown media type. Unable to unmarhal to MultiSearchResultsInfo")
+var ErrUnknownMediaType = errors.New("Unknown media type. Unable to unmarhal to MultiSearchResultsInfo")
 
 // CollectionSearchResults struct
 type CollectionSearchResults struct {
@@ -71,85 +71,85 @@ type MovieSearchResults struct {
 }
 
 type MultiSearchBase interface {
-	interfaceMarkerMethod()  // We need a method to be
+	interfaceMarkerMethod() // We need a method to be
 }
 
 type MultiSearchMovieInfo struct {
-	PosterPath		string  	`json:"poster_path"`
-	Adult			bool
-	Overview        	string  	`json:"overview"`
-	ReleaseDate		string 		`json:"release_date"`
-	OriginalTitle  		string  	`json:"original_title"`
-	GenreIDs		[]uint32 	`json:"ganre_ids"`
-	OriginalLanguage 	string   	`json:"original_language"`
-	Title  			string  	`json:"title"`
-	BackdropPath  		string 		`json:"backdrop_path"`
-	Popularity    		float32
-	VoteCount     		uint32  	`json:"vote_count"`
-	Video			bool
-	VoteAverage 		float32  	`json:"vote_average"`
-	ID         	 int
-	MediaType     	 string  `json:"media_type"`
+	PosterPath       string `json:"poster_path"`
+	Adult            bool
+	Overview         string   `json:"overview"`
+	ReleaseDate      string   `json:"release_date"`
+	OriginalTitle    string   `json:"original_title"`
+	GenreIDs         []uint32 `json:"ganre_ids"`
+	OriginalLanguage string   `json:"original_language"`
+	Title            string   `json:"title"`
+	BackdropPath     string   `json:"backdrop_path"`
+	Popularity       float32
+	VoteCount        uint32 `json:"vote_count"`
+	Video            bool
+	VoteAverage      float32 `json:"vote_average"`
+	ID               int
+	MediaType        string `json:"media_type"`
 }
 
-func (MultiSearchMovieInfo)interfaceMarkerMethod() {return }
+func (MultiSearchMovieInfo) interfaceMarkerMethod() { return }
 
 type MultiSearchTvInfo struct {
-	BackdropPath  	 string `json:"backdrop_path"`
-	OriginalName  	 string   `json:"original_name"`
-	OriginalTitle 	 string   `json:"original_title"`
-	OriginalLanguage string   	`json:"original_language"`
-	Overview      	 string   `json:"overview"`
+	BackdropPath     string   `json:"backdrop_path"`
+	OriginalName     string   `json:"original_name"`
+	OriginalTitle    string   `json:"original_title"`
+	OriginalLanguage string   `json:"original_language"`
+	Overview         string   `json:"overview"`
 	FirstAirDate     string   `json:"first_air_date"`
-	OriginCountry 	 []string `json:"origin_country"`
-	GenreIDs      	 []uint32 `json:"ganre_ids"`
+	OriginCountry    []string `json:"origin_country"`
+	GenreIDs         []uint32 `json:"ganre_ids"`
 	PosterPath       string   `json:"poster_path"`
-	Popularity    	 float32
-	Name          	 string
-	VoteAverage   	 float32 `json:"vote_average"`
-	VoteCount     	 uint32  `json:"vote_count"`
-	ID         	 int
-	MediaType     	 string  `json:"media_type"`
-
+	Popularity       float32
+	Name             string
+	VoteAverage      float32 `json:"vote_average"`
+	VoteCount        uint32  `json:"vote_count"`
+	ID               int
+	MediaType        string `json:"media_type"`
 }
 
-func (MultiSearchTvInfo)interfaceMarkerMethod() {return }
+func (MultiSearchTvInfo) interfaceMarkerMethod() { return }
 
 type MultiSearchPersonInfo struct {
-	ProfilePath  	 string `json:"profile_path"`
-	Adult		 bool
-	KnownFor	 MultiSearchResultsInfo
-	ID         	 int
-	MediaType     	 string  `json:"media_type"`
+	ProfilePath string `json:"profile_path"`
+	Adult       bool
+	KnownFor    MultiSearchResultsInfo
+	ID          int
+	MediaType   string `json:"media_type"`
 }
 
-func (MultiSearchPersonInfo) interfaceMarkerMethod() {return }
+func (MultiSearchPersonInfo) interfaceMarkerMethod() { return }
 
 func (res MultiSearchPersonInfo) GetMoviesKnownFor() (movieResults []MultiSearchMovieInfo) {
-	movieResults = make([]MultiSearchMovieInfo,0);
+	movieResults = make([]MultiSearchMovieInfo, 0)
 
-	for i := 0; i < len(res.KnownFor);i++ {
-		var base interface{}= res.KnownFor[i]
-		if casted,ok := base.(*MultiSearchMovieInfo); ok {
+	for i := 0; i < len(res.KnownFor); i++ {
+		var base interface{} = res.KnownFor[i]
+		if casted, ok := base.(*MultiSearchMovieInfo); ok {
 			movieResults = append(movieResults, *casted)
 		}
 	}
 
-	return;
+	return
 }
 
 func (res MultiSearchPersonInfo) GetTvKnownFor() (tvResults []MultiSearchTvInfo) {
-	tvResults = make([]MultiSearchTvInfo,0);
+	tvResults = make([]MultiSearchTvInfo, 0)
 
-	for i := 0; i < len(res.KnownFor);i++ {
-		var base interface{}= res.KnownFor[i]
-		if casted,ok := base.(*MultiSearchTvInfo); ok {
+	for i := 0; i < len(res.KnownFor); i++ {
+		var base interface{} = res.KnownFor[i]
+		if casted, ok := base.(*MultiSearchTvInfo); ok {
 			tvResults = append(tvResults, *casted)
 		}
 	}
 
-	return;
+	return
 }
+
 type MultiSearchResultsInfo []MultiSearchBase
 
 func (v *MultiSearchResultsInfo) UnmarshalJSON(data []byte) error {
@@ -191,55 +191,53 @@ func (v *MultiSearchResultsInfo) UnmarshalJSON(data []byte) error {
 		}
 		*v = append(*v, actual)
 	}
-	return nil;
+	return nil
 }
+
 // MultiSearchResults struct
 type MultiSearchResults struct {
-	Page    int
-	Results MultiSearchResultsInfo
+	Page         int
+	Results      MultiSearchResultsInfo
 	TotalPages   int `json:"total_pages"`
 	TotalResults int `json:"total_results"`
 }
 
-
-
 func (res MultiSearchResults) GetMoviesResults() (movieResults []MultiSearchMovieInfo) {
 
-	for i := 0; i < len(res.Results);i++ {
-		var base interface{}= res.Results[i]
-		if casted,ok := base.(*MultiSearchMovieInfo); ok {
+	for i := 0; i < len(res.Results); i++ {
+		var base interface{} = res.Results[i]
+		if casted, ok := base.(*MultiSearchMovieInfo); ok {
 			movieResults = append(movieResults, *casted)
 		}
 	}
 
-	return;
+	return
 }
 
 func (res MultiSearchResults) GetTvResults() (tvResults []MultiSearchTvInfo) {
 
-	for i := 0; i < len(res.Results);i++ {
-		var base interface{}= res.Results[i]
+	for i := 0; i < len(res.Results); i++ {
+		var base interface{} = res.Results[i]
 
-		if casted,ok := base.(*MultiSearchTvInfo); ok {
+		if casted, ok := base.(*MultiSearchTvInfo); ok {
 			tvResults = append(tvResults, *casted)
 		}
 	}
 
-	return;
+	return
 }
 
 func (res MultiSearchResults) GetPersonResults() (personResults []MultiSearchPersonInfo) {
 
-	for i := 0; i < len(res.Results);i++ {
-		var base interface{}= res.Results[i]
-		if casted,ok := base.(*MultiSearchPersonInfo); ok {
+	for i := 0; i < len(res.Results); i++ {
+		var base interface{} = res.Results[i]
+		if casted, ok := base.(*MultiSearchPersonInfo); ok {
 			personResults = append(personResults, *casted)
 		}
 	}
 
-	return;
+	return
 }
-
 
 // PersonSearchResults struct
 type PersonSearchResults struct {
@@ -297,7 +295,7 @@ func (tmdb *TMDb) SearchCollection(name string, options map[string]string) (*Col
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/collection?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &collections)
+	result, err := tmdb.get(uri, &collections)
 	return result.(*CollectionSearchResults), err
 }
 
@@ -310,7 +308,7 @@ func (tmdb *TMDb) SearchCompany(name string, options map[string]string) (*Compan
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/company?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &companies)
+	result, err := tmdb.get(uri, &companies)
 	return result.(*CompanySearchResults), err
 }
 
@@ -323,7 +321,7 @@ func (tmdb *TMDb) SearchKeyword(name string, options map[string]string) (*Keywor
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/keyword?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &keywords)
+	result, err := tmdb.get(uri, &keywords)
 	return result.(*KeywordSearchResults), err
 }
 
@@ -337,7 +335,7 @@ func (tmdb *TMDb) SearchList(name string, options map[string]string) (*ListSearc
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/list?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &lists)
+	result, err := tmdb.get(uri, &lists)
 	return result.(*ListSearchResults), err
 }
 
@@ -355,7 +353,7 @@ func (tmdb *TMDb) SearchMovie(name string, options map[string]string) (*MovieSea
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/movie?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &movies)
+	result, err := tmdb.get(uri, &movies)
 	return result.(*MovieSearchResults), err
 }
 
@@ -370,7 +368,7 @@ func (tmdb *TMDb) SearchMulti(name string, options map[string]string) (*MultiSea
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/multi?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &multis)
+	result, err := tmdb.get(uri, &multis)
 	return result.(*MultiSearchResults), err
 }
 
@@ -385,7 +383,7 @@ func (tmdb *TMDb) SearchPerson(name string, options map[string]string) (*PersonS
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/person?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &people)
+	result, err := tmdb.get(uri, &people)
 	return result.(*PersonSearchResults), err
 }
 
@@ -401,6 +399,6 @@ func (tmdb *TMDb) SearchTv(name string, options map[string]string) (*TvSearchRes
 	safeName := url.QueryEscape(name)
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/search/tv?query=%s&api_key=%s%s", baseURL, safeName, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &shows)
+	result, err := tmdb.get(uri, &shows)
 	return result.(*TvSearchResults), err
 }

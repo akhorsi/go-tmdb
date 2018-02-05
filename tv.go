@@ -230,7 +230,7 @@ func (tmdb *TMDb) GetTvInfo(id int, options map[string]string) (*TV, error) {
 	var tvInfo TV
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &tvInfo)
+	result, err := tmdb.get(uri, &tvInfo)
 	return result.(*TV), err
 }
 
@@ -239,7 +239,7 @@ func (tmdb *TMDb) GetTvInfo(id int, options map[string]string) (*TV, error) {
 func (tmdb *TMDb) GetTvAccountStates(id int, sessionID string) (*TvAccountState, error) {
 	var state TvAccountState
 	uri := fmt.Sprintf("%s/tv/%v/account_states?api_key=%s&session_id=%s", baseURL, id, tmdb.apiKey, sessionID)
-	result, err := getTmdb(uri, &state)
+	result, err := tmdb.get(uri, &state)
 	return result.(*TvAccountState), err
 }
 
@@ -253,7 +253,7 @@ func (tmdb *TMDb) GetTvAiringToday(options map[string]string) (*TvPagedResults, 
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/airing_today?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := tmdb.get(uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
@@ -262,7 +262,7 @@ func (tmdb *TMDb) GetTvAiringToday(options map[string]string) (*TvPagedResults, 
 func (tmdb *TMDb) GetTvAlternativeTitles(id int) (*TvAlternativeTitles, error) {
 	var titles TvAlternativeTitles
 	uri := fmt.Sprintf("%s/tv/%v/alternative_titles?api_key=%s", baseURL, id, tmdb.apiKey)
-	result, err := getTmdb(uri, &titles)
+	result, err := tmdb.get(uri, &titles)
 	return result.(*TvAlternativeTitles), err
 }
 
@@ -275,7 +275,7 @@ func (tmdb *TMDb) GetTvChanges(id int, options map[string]string) (*TvChanges, e
 	var changes TvChanges
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/changes?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &changes)
+	result, err := tmdb.get(uri, &changes)
 	return result.(*TvChanges), err
 }
 
@@ -288,7 +288,7 @@ func (tmdb *TMDb) GetTvCredits(id int, options map[string]string) (*TvCredits, e
 	var credits TvCredits
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/credits?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &credits)
+	result, err := tmdb.get(uri, &credits)
 	return result.(*TvCredits), err
 }
 
@@ -300,7 +300,7 @@ func (tmdb *TMDb) GetTvExternalIds(showID int, options map[string]string) (*TvEx
 	var ids TvExternalIds
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/external_ids?api_key=%s%s", baseURL, showID, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &ids)
+	result, err := tmdb.get(uri, &ids)
 	return result.(*TvExternalIds), err
 }
 
@@ -313,7 +313,7 @@ func (tmdb *TMDb) GetTvImages(id int, options map[string]string) (*TvImages, err
 	var images TvImages
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/images?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &images)
+	result, err := tmdb.get(uri, &images)
 	return result.(*TvImages), err
 }
 
@@ -325,7 +325,7 @@ func (tmdb *TMDb) GetTvKeywords(id int, options map[string]string) (*TvKeywords,
 	var keywords TvKeywords
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/keywords?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &keywords)
+	result, err := tmdb.get(uri, &keywords)
 	return result.(*TvKeywords), err
 }
 
@@ -334,7 +334,7 @@ func (tmdb *TMDb) GetTvKeywords(id int, options map[string]string) (*TvKeywords,
 func (tmdb *TMDb) GetTvLatest() (*TV, error) {
 	var tv TV
 	uri := fmt.Sprintf("%s/tv/latest?api_key=%s", baseURL, tmdb.apiKey)
-	result, err := getTmdb(uri, &tv)
+	result, err := tmdb.get(uri, &tv)
 	return result.(*TV), err
 }
 
@@ -347,7 +347,7 @@ func (tmdb *TMDb) GetTvOnTheAir(options map[string]string) (*TvPagedResults, err
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/on_the_air?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := tmdb.get(uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
@@ -360,7 +360,7 @@ func (tmdb *TMDb) GetTvPopular(options map[string]string) (*TvPagedResults, erro
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/popular?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := tmdb.get(uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
@@ -374,7 +374,7 @@ func (tmdb *TMDb) GetTvSimilar(id int, options map[string]string) (*TvPagedResul
 	var similar TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/similar?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &similar)
+	result, err := tmdb.get(uri, &similar)
 	return result.(*TvPagedResults), err
 }
 
@@ -387,7 +387,7 @@ func (tmdb *TMDb) GetTvTopRated(options map[string]string) (*TvPagedResults, err
 	var onAir TvPagedResults
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/top_rated?api_key=%s%s", baseURL, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &onAir)
+	result, err := tmdb.get(uri, &onAir)
 	return result.(*TvPagedResults), err
 }
 
@@ -396,7 +396,7 @@ func (tmdb *TMDb) GetTvTopRated(options map[string]string) (*TvPagedResults, err
 func (tmdb *TMDb) GetTvTranslations(id int) (*TvTranslations, error) {
 	var translations TvTranslations
 	uri := fmt.Sprintf("%s/tv/%v/translations?api_key=%s", baseURL, id, tmdb.apiKey)
-	result, err := getTmdb(uri, &translations)
+	result, err := tmdb.get(uri, &translations)
 	return result.(*TvTranslations), err
 }
 
@@ -408,6 +408,6 @@ func (tmdb *TMDb) GetTvVideos(id int, options map[string]string) (*TvVideos, err
 	var videos TvVideos
 	optionsString := getOptionsString(options, availableOptions)
 	uri := fmt.Sprintf("%s/tv/%v/videos?api_key=%s%s", baseURL, id, tmdb.apiKey, optionsString)
-	result, err := getTmdb(uri, &videos)
+	result, err := tmdb.get(uri, &videos)
 	return result.(*TvVideos), err
 }
